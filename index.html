@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora - Lixi Exchange</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e6f7ff;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #4b0082;
+        }
+        .container {
+            background-color: #dcd6f7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        select, input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4b0082;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #5a0dad;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #4b0082;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #4b0082;
+        }
+        .hidden {
+            display: none;
+        }
+        .guia {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .guia h2 {
+            color: #4b0082;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora - Lixi Exchange</h1>
+
+    <div class="container">
+        <div id="calculadora-rangos">
+            <fieldset>
+                <legend>Calculadora de Rangos</legend>
+                <label for="rango-compra">Rango en que se compra:</label><br>
+                <select id="rango-compra">
+                    <option value="morado">Rango Morado</option>
+                    <option value="rojo">Rango Rojo</option>
+                </select><br>
+
+                <label for="precio-min">Ingresa el precio mínimo:</label><br>
+                <input type="text" id="precio-min" placeholder="Ejemplo: 10,000" oninput="formatearNumero(this)"><br>
+
+                <label for="rango-venta">Rango en que se vende:</label><br>
+                <select id="rango-venta">
+                    <option value="naranja">Rango Naranja</option>
+                    <option value="rojo">Rango Rojo</option>
+                </select><br>
+
+                <label for="precio-max">Ingresa el precio máximo:</label><br>
+                <input type="text" id="precio-max" placeholder="Ejemplo: 15,000" oninput="formatearNumero(this)"><br>
+
+                <button type="button" onclick="calcularRango()">Calcular Rango</button>
+            </fieldset>
+        </div>
+
+        <div id="calculadora-comision" class="hidden">
+            <fieldset>
+                <legend>Calculadora de Comisión por Venta de Jugador</legend>
+                <label for="cantidad">Ingresa la cantidad:</label><br>
+                <input type="text" id="cantidad" placeholder="Ejemplo: 1000" oninput="formatearNumero(this)"><br>
+                <button onclick="calcularComision()">Calcular Monto Final</button>
+            </fieldset>
+        </div>
+
+        <div class="result" id="resultado"></div>
+        
+        <button onclick="toggleCalculadora()">Cambiar a Calculadora de Comisión</button>
+    </div>
+
+    <div class="guia">
+        <h2>Aprende a Tradear con Estos Pasos</h2>
+        <h3>GUÍA DE COMO ANALIZAR GRÁFICAS PARA TRADEO</h3>
+        <ol>
+            <li><strong>Máximos y mínimos</strong>
+                <ul>
+                    <li><strong>Máximos:</strong> Los picos más altos de la gráfica. Vende cuando el precio esté alto antes de que vuelva a bajar.</li>
+                    <li><strong>Mínimos:</strong> Los puntos más bajos. Compra en este momento porque es el precio más barato.</li>
+                </ul>
+            </li>
+            <li><strong>Tendencias</strong>
+                <ul>
+                    <li><strong>Bajadas prolongadas:</strong> Si el precio lleva bajando varios días, espera un poco más antes de comprar.</li>
+                    <li><strong>Subidas continuas:</strong> No compres durante subidas porque pagarás más caro.</li>
+                    <li><strong>Cambios de tendencia:</strong> Fíjate cuando el precio deja de bajar o subir, ya que esto indica cuándo comprar o vender.</li>
+                </ul>
+            </li>
+            <li><strong>Estabilidad</strong>
+                <ul>
+                    <li><strong>Precio bajo constante:</strong> Si el precio ha estado muy bajo durante un tiempo y no cambia, es una señal de estabilidad. Esto es un indicador de que no debes comprar.</li>
+                </ul>
+            </li>
+            <li><strong>Identifica momentos de bajón</strong>
+                <ul>
+                    <li><strong>Antes de eventos:</strong> Los precios bajan porque muchos jugadores venden para prepararse.</li>
+                    <li><strong>Después de eventos:</strong> Los precios bajan porque hay más oferta en el mercado (sobres o nuevas cartas).</li>
+                    <li><strong>Picos de oferta:</strong> Cuando muchos sobres se abren al mismo tiempo, los precios bajan. Compra aquí.</li>
+                </ul>
+            </li>
+            <li><strong>Vender en el pico</strong>
+                <ul>
+                    <li><strong>Monitorea subidas rápidas:</strong> Los picos suelen ocurrir cuando un jugador es necesario en desafíos o intercambios.</li>
+                    <li><strong>Vende antes del bajón:</strong> Cuando notes que el precio llega a un pico y empieza a estabilizarse o bajar, es el momento de vender.</li>
+                </ul>
+            </li>
+            <li><strong>Consejo general</strong>
+                <ul>
+                    <li><strong>Analiza patrones:</strong> Revisa la gráfica constantemente para identificar tendencias.</li>
+                    <li><strong>Usa los eventos a tu favor:</strong> Promociones o lanzamientos siempre afectan los precios. Aprovechalos para comprar barato y vender caro.</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="footer">
+        <p>By Lixi Exchange New Era</p>
+    </div>
+
+    <script>
+        function formatearNumero(input) {
+            // Eliminar caracteres no numéricos
+            const valor = input.value.replace(/[^0-9]/g, '');
+            // Formatear con comas
+            input.value = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function calcularRango() {
+            const rangoCompra = document.getElementById("rango-compra").value;
+            const precioMin = parseFloat(document.getElementById("precio-min").value.replace(/,/g, ''));
+            const rangoVenta = document.getElementById("rango-venta").value;
+            const precioMax = parseFloat(document.getElementById("precio-max").value.replace(/,/g, ''));
+
+            // Validaciones
+            if (isNaN(precioMin) || isNaN(precioMax)) {
+                document.getElementById("resultado").textContent = "Por favor, ingresa valores válidos.";
+                return;
+            }
+            if (precioMin <= 0 || precioMax <= 0) {
+                document.getElementById("resultado").textContent = "Los precios deben ser mayores que cero.";
+                return;
+            }
+            if (precioMin >= precioMax) {
+                document.getElementById("resultado").textContent = "El precio mínimo debe ser menor que el precio máximo.";
+                return;
+            }
+
+            // Cálculo del precio ajustado
+            let precioAjustado = 0;
+            if (rangoCompra === "morado" && rangoVenta === "naranja") {
+                precioAjustado = (precioMax * 0.9) / 4;
+            } else if (rangoCompra === "rojo" && rangoVenta === "naranja") {
+                precioAjustado = (precioMax * 0.9) / 2;
+            } else if (rangoCompra === "morado" && rangoVenta === "rojo") {
+                precioAjustado = (precioMax * 0.9) / 2;
+            }
+
+            // Cálculo de ganancia o pérdida
+            const diferencia = precioAjustado - precioMin;
+            const resultado = diferencia > 0
+                ? `Ganancia (${diferencia.toLocaleString()} por carta)`
+                : `Pérdida (${Math.abs(diferencia).toLocaleString()} por carta)`;
+
+            // Mostrar el resultado
+            document.getElementById("resultado").textContent = resultado;
+        }
+
+        function calcularComision() {
+            const cantidad = parseFloat(document.getElementById("cantidad").value.replace(/,/g, ''));
+            const comisionPorcentaje = 0.10; // 10%
+            
+            if (!isNaN(cantidad) && cantidad > 0) {
+                const comision = cantidad * comisionPorcentaje;
+                const montoFinal = cantidad - comision;
+                document.getElementById("resultado").textContent = `Monto después de la comisión: ${montoFinal.toLocaleString()}`;
+            } else {
+                document.getElementById("resultado").textContent = "Por favor, ingresa un número válido.";
+            }
+        }
+
+        function toggleCalculadora() {
+            const rangoDiv = document.getElementById("calculadora-rangos");
+            const comisionDiv = document.getElementById("calculadora-comision");
+            const resultadoDiv = document.getElementById("resultado");
+
+            if (rangoDiv.classList.contains("hidden")) {
+                rangoDiv.classList.remove("hidden");
+                comisionDiv.classList.add("hidden");
+                resultadoDiv.textContent = ""; // Limpiar resultado al cambiar
+                document.querySelector('button[onclick="toggleCalculadora()"]').textContent = "Cambiar a Calculadora de Comisión por Venta de Jugador";
+            } else {
+                rangoDiv.classList.add("hidden");
+                comisionDiv.classList.remove("hidden");
+                resultadoDiv.textContent = ""; // Limpiar resultado al cambiar
+                document.querySelector('button[onclick="toggleCalculadora()"]').textContent = "Cambiar a Calculadora de Rangos";
+            }
+        }
+    </script>
+</body>
+</html>
